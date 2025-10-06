@@ -19,8 +19,8 @@ export default function TaxResults({
   };
 
   return (
-    <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-300">
-      <div className="bg-card border-l-4 border-l-primary rounded-lg p-8 shadow-lg">
+    <div className="space-y-6">
+      <div className="bg-card border-l-4 border-l-primary rounded-lg p-8 shadow-md">
         <div className="space-y-6">
           <div>
             <p className="text-sm text-muted-foreground mb-2">Total Tax Owed</p>

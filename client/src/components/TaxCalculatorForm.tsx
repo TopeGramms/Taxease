@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import ModeToggle from "./ModeToggle";
 import CurrencyInput from "./CurrencyInput";
-import CryptoInputs from "./CryptoInputs";
 import TaxResults from "./TaxResults";
+import FormSection from "./FormSection";
 import { Calculator } from "lucide-react";
 
 interface TaxFormData {
@@ -21,8 +20,11 @@ interface TaxFormData {
   isSmallCompany: boolean;
 }
 
-export default function TaxCalculatorForm() {
-  const [mode, setMode] = useState<"2025" | "legacy">("2025");
+interface TaxCalculatorFormProps {
+  mode: "2025" | "legacy";
+}
+
+export default function TaxCalculatorForm({ mode }: TaxCalculatorFormProps) {
   const [formData, setFormData] = useState<TaxFormData>({
     employmentIncome: "",
     businessIncome: "",
@@ -39,8 +41,6 @@ export default function TaxCalculatorForm() {
     totalTax: number;
     afterTaxIncome: number;
   } | null>(null);
-
-  const showCryptoQuantity = formData.cryptoBuyPrice !== "" || formData.cryptoSellPrice !== "";
 
   useEffect(() => {
     const saved = localStorage.getItem("taxease-data");
@@ -144,15 +144,13 @@ export default function TaxCalculatorForm() {
   };
 
   const handleDownloadPDF = () => {
-    console.log("PDF Download triggered - will implement with jsPDF");
+    console.log("PDF Download triggered");
     alert("PDF download feature coming soon!");
   };
 
   return (
-    <div className="space-y-8">
-      <ModeToggle mode={mode} onModeChange={setMode} />
-
-      <div className="space-y-6">
+    <div className="space-y-6">
+      <FormSection title="Employment Income">
         <CurrencyInput
           id="employment-income"
           label="Employment Income (₦)"
@@ -160,7 +158,9 @@ export default function TaxCalculatorForm() {
           onChange={(val) => updateField("employmentIncome", val)}
           helperText="Your monthly or annual salary"
         />
+      </FormSection>
 
+      <FormSection title="Business/Freelance Income">
         <CurrencyInput
           id="business-income"
           label="Business/Freelance Income (₦)"
@@ -168,19 +168,37 @@ export default function TaxCalculatorForm() {
           onChange={(val) => updateField("businessIncome", val)}
           helperText="Income from business activities or freelancing"
         />
+      </FormSection>
 
-        <CryptoInputs
-          buyPrice={formData.cryptoBuyPrice}
-          sellPrice={formData.cryptoSellPrice}
-          quantity={formData.cryptoQuantity}
-          onBuyPriceChange={(val) => updateField("cryptoBuyPrice", val)}
-          onSellPriceChange={(val) => updateField("cryptoSellPrice", val)}
-          onQuantityChange={(val) => updateField("cryptoQuantity", val)}
-          showQuantity={showCryptoQuantity}
-        />
+      <FormSection title="Crypto Asset Details">
+        <div className="space-y-4">
+          <CurrencyInput
+            id="crypto-buy-price"
+            label="Buy Price (₦)"
+            value={formData.cryptoBuyPrice}
+            onChange={(val) => updateField("cryptoBuyPrice", val)}
+            placeholder="0"
+          />
+          <CurrencyInput
+            id="crypto-sell-price"
+            label="Sell Price (₦)"
+            value={formData.cryptoSellPrice}
+            onChange={(val) => updateField("cryptoSellPrice", val)}
+            placeholder="0"
+          />
+          <CurrencyInput
+            id="crypto-quantity"
+            label="Quantity (optional)"
+            value={formData.cryptoQuantity}
+            onChange={(val) => updateField("cryptoQuantity", val)}
+            placeholder="1"
+          />
+        </div>
+      </FormSection>
 
-        {mode === "2025" && (
-          <div className="space-y-6 animate-in fade-in duration-300">
+      {mode === "2025" && (
+        <FormSection title="Deductions & Reliefs">
+          <div className="space-y-4">
             <CurrencyInput
               id="rent-paid"
               label="Rent Paid (₦)"
@@ -210,7 +228,7 @@ export default function TaxCalculatorForm() {
               onChange={(val) => updateField("otherDeductions", val)}
             />
 
-            <div className="flex items-center space-x-3 p-4 bg-accent/20 rounded-lg">
+            <div className="flex items-center space-x-3 pt-2">
               <Checkbox
                 id="small-company"
                 checked={formData.isSmallCompany}
@@ -225,12 +243,12 @@ export default function TaxCalculatorForm() {
               </Label>
             </div>
           </div>
-        )}
-      </div>
+        </FormSection>
+      )}
 
       <Button
         onClick={handleCalculate}
-        className="w-full h-14 text-base font-bold"
+        className="w-full h-12 text-base font-semibold shadow-sm"
         size="lg"
         data-testid="button-calculate-tax"
       >
