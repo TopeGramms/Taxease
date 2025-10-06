@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
 import TaxCalculatorForm from "@/components/TaxCalculatorForm";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { Menu } from "lucide-react";
 
 export default function Home() {
@@ -54,6 +55,7 @@ export default function Home() {
           </main>
         </div>
       </div>
+      <WhatsAppButton />
     </SidebarProvider>
   );
 }
