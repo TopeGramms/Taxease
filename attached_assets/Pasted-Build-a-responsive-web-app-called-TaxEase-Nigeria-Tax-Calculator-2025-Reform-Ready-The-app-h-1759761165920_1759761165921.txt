@@ -1,0 +1,122 @@
+Build a responsive web app called “TaxEase – Nigeria Tax Calculator (2025 Reform Ready).”
+
+The app helps Nigerians estimate their personal income and digital asset taxes under the 2025 Nigeria Tax Reform Act, which takes effect in January 2026.
+
+🧩 Core Features
+
+Mode Toggle:
+
+“2025 Reform (Default)”
+
+“Legacy (Pre-2025 Finance Act)”
+
+Input Fields:
+
+Employment Income (₦)
+
+Business/Freelance Income (₦)
+
+Crypto Asset Details: Buy Price (₦), Sell Price (₦), Quantity (optional), or direct Gain input
+
+Rent Paid (₦)
+
+Pension Contribution (₦)
+
+NHF Contribution (₦)
+
+Other Deductions (₦)
+
+Checkbox → “Small company (turnover ≤ ₦100m)”
+
+Tax Calculation Logic (2025 mode):
+
+Combine income + business + crypto gains
+
+First ₦800,000 is exempt
+
+Apply reliefs:
+
+Rent relief = 20% of rent (max ₦500,000)
+
+Pension + NHF + other deductions
+
+Apply progressive PIT rates:
+
+7% on first ₦300,000
+
+11% on next ₦300,000
+
+15% on next ₦500,000
+
+19% on next ₦500,000
+
+21% on next ₦1,600,000
+
+24% on next ₦3,200,000
+
+25% on anything above
+
+If Small Company → ₦0 tax
+
+Output both Tax Owed and After-Tax Income
+
+Legacy Mode (Pre-2025):
+
+Salary: 10% flat tax
+
+Business: 15% flat tax
+
+Crypto: 10% of gain (sell − buy × qty)
+
+🧾 Display Section
+
+Show:
+
+“Total Tax Owed: ₦___”
+
+“After-Tax Income: ₦___”
+
+Fun line: “Congrats! FG just took ₦___ from your hustle 💸”
+
+Add banner:
+“Based on Nigeria’s 2025 Tax Reform Act (effective Jan 2026). For estimates only.”
+
+Include button → “Download as PDF”
+
+Store last inputs in localStorage
+
+🎨 Design
+
+Minimal clean layout (max width 500px, centered)
+
+Use #008751 (Nigerian green) for headings/buttons
+
+Font: “Poppins” or “Inter”
+
+Soft gray background (#f9f9f9)
+
+Smooth transitions when switching modes or showing crypto inputs
+
+Responsive for both desktop and mobile
+
+🧠 Extra Features
+
+Auto-detect crypto mode when user enters buy/sell price
+
+Footer:
+
+Last checked: October 6, 2025
+TaxEase uses 2025 Nigeria Tax Reform Act logic (effective Jan 2026). Consult a tax professional for specific cases.
+Built with ❤️ by Topegramms
+
+⚙️ Tech Requirements
+
+Use only HTML, CSS, and JavaScript (no frameworks).
+
+Code must be well-commented, readable, and editable later.
+
+Keep all logic client-side.
+
+Make sure all currency values display with “₦” and commas (e.g. ₦1,500,000).
+
+Once you
