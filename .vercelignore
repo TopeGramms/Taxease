@@ -1,0 +1,13 @@
+# Ignore server and development files when deploying frontend-only to Vercel
+server/
+node_modules/
+backups/
+dist/
+.vscode/
+.env
+*.log
+*.tsbuildinfo
+.idea/
+coverage/
+# Large or sensitive assets
+attached_assets/
