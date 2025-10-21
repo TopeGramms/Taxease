@@ -3,6 +3,7 @@
 **TaxEase** is a modern, responsive web app that helps Nigerians easily calculate their personal, business, and crypto-related taxes based on the **2025 Tax Reform Act**.  
 Built to simplify complex tax laws into clear, actionable results — especially for freelancers, digital creators, and small business owners.
 
+check here -  https://taxease-lemon.vercel.app
 ---
 
 ## ✨ Features
