@@ -28,5 +28,5 @@ Built to simplify complex tax laws into clear, actionable results — especially
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/TaxEase.git
+   git clone https://github.com/topegramms/TaxEase.git
    cd TaxEase
