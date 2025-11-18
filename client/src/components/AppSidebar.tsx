@@ -5,8 +5,8 @@ import {
 } from "@/components/ui/sidebar";
 
 interface AppSidebarProps {
-  mode: "2025" | "legacy";
-  onModeChange: (mode: "2025" | "legacy") => void;
+  mode: "2026" | "legacy";
+  onModeChange: (mode: "2026" | "legacy") => void;
 }
 
 export default function AppSidebar({ mode, onModeChange }: AppSidebarProps) {
@@ -15,10 +15,10 @@ export default function AppSidebar({ mode, onModeChange }: AppSidebarProps) {
       <SidebarHeader className="p-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-primary" data-testid="text-sidebar-title">
-            TaxEase
+            Taxease
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Nigeria Tax Calculator<br />2025 Reform Ready
+            Personal income tax calculator
           </p>
         </div>
       </SidebarHeader>
@@ -31,15 +31,15 @@ export default function AppSidebar({ mode, onModeChange }: AppSidebarProps) {
           <div className="space-y-2">
             <button
               type="button"
-              data-testid="button-sidebar-mode-2025"
-              onClick={() => onModeChange("2025")}
+              data-testid="button-sidebar-mode-2026"
+              onClick={() => onModeChange("2026")}
               className={`w-full px-4 py-3 rounded-lg text-sm font-semibold text-left transition-all ${
-                mode === "2025"
+                mode === "2026"
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-transparent text-foreground hover-elevate active-elevate-2 border border-border"
               }`}
             >
-              2025 Reform
+              2026 Tax reform
             </button>
             <button
               type="button"

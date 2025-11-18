@@ -19,6 +19,7 @@ export default function CurrencyInput({
   helperText,
 }: CurrencyInputProps) {
   const formatCurrency = (val: string) => {
+    if (!val) return ""; // Add this check
     const num = val.replace(/[^\d]/g, "");
     if (!num) return "";
     return Number(num).toLocaleString();
@@ -42,7 +43,7 @@ export default function CurrencyInput({
           id={id}
           data-testid={`input-${id}`}
           type="text"
-          value={formatCurrency(value)}
+          value={formatCurrency(value || "")} // Add fallback here too
           onChange={handleChange}
           placeholder={placeholder}
           className="pl-8 h-12 text-base"

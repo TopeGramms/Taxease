@@ -1,0 +1,13 @@
+name: "My Continue Config"
+version: 1
+
+models:
+  - title: "Groq Llama3 70B"
+    provider: "groq"
+    model: "llama3-70b-8192"
+    apiKey: "${GROQ_API_KEY}"
+
+tabAutocompleteModel:
+  provider: "groq"
+  model: "llama3-70b-8192"
+  apiKey: "${GROQ_API_KEY}"

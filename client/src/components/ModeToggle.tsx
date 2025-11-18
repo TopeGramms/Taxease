@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 interface ModeToggleProps {
-  mode: "2025" | "legacy";
-  onModeChange: (mode: "2025" | "legacy") => void;
+  mode: "2026" | "legacy";
+  onModeChange: (mode: "2026" | "legacy") => void;
 }
 
 export default function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
@@ -10,15 +10,15 @@ export default function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
     <div className="flex gap-2 p-1 bg-muted rounded-lg w-full">
       <button
         type="button"
-        data-testid="button-mode-2025"
-        onClick={() => onModeChange("2025")}
+        data-testid="button-mode-2026"
+        onClick={() => onModeChange("2026")}
         className={`flex-1 px-6 py-3 rounded-md text-sm font-semibold transition-all duration-200 ${
-          mode === "2025"
+          mode === "2026"
             ? "bg-primary text-primary-foreground shadow-sm"
             : "text-muted-foreground hover-elevate active-elevate-2"
         }`}
       >
-        2025 Reform
+        2026 tax reform (recommended)
       </button>
       <button
         type="button"
@@ -30,7 +30,7 @@ export default function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
             : "text-muted-foreground hover-elevate active-elevate-2"
         }`}
       >
-        Legacy (Pre-2025)
+        Pre-reform (legacy)
       </button>
     </div>
   );

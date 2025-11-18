@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { createServer } from "http";
 
 const app = express();
 app.use(express.json());
@@ -51,12 +52,11 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 if (app.get("env") === "development") {
   // This will only run locally
   (async () => {
-    const server = await setupVite(app, require("http").createServer(app));
+    const server = await setupVite(app, createServer(app));
     const port = parseInt(process.env.PORT || '5000', 10);
     server.listen({
       port,
       host: "0.0.0.0",
-      reusePort: true,
     }, () => {
       log(`serving on port ${port}`);
     });

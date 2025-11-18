@@ -6,7 +6,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { Menu } from "lucide-react";
 
 export default function Home() {
-  const [mode, setMode] = useState<"2025" | "legacy">("2025");
+  const [mode, setMode] = useState<"2026" | "legacy">("2026");
 
   const style = {
     "--sidebar-width": "20rem",
@@ -20,7 +20,7 @@ export default function Home() {
         
         <div className="flex flex-col flex-1 overflow-hidden">
           <header className="lg:hidden flex items-center justify-between p-4 border-b bg-background sticky top-0 z-10">
-            <h1 className="text-xl font-bold text-primary">TaxEase</h1>
+            <h1 className="text-xl font-bold text-primary">Taxease</h1>
             <SidebarTrigger data-testid="button-sidebar-toggle">
               <Menu className="w-6 h-6" />
             </SidebarTrigger>
@@ -47,8 +47,7 @@ export default function Home() {
                   Last checked: October 6, 2025
                 </p>
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-xl mx-auto">
-                  TaxEase uses 2025 Nigeria Tax Reform Act logic (effective Jan 2026).
-                  Consult a tax professional for specific cases.
+                  Taxease uses the 2026 tax reform by default (effective Jan 1, 2026). Consult a tax professional for specific cases.
                 </p>
               </footer>
             </div>

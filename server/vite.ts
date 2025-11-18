@@ -65,6 +65,7 @@ export async function setupVite(app: Express, server: Server) {
       next(e);
     }
   });
+  return server;
 }
 
 export function serveStatic(app: Express) {
