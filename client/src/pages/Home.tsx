@@ -20,7 +20,7 @@ export default function Home() {
         
         <div className="flex flex-col flex-1 overflow-hidden">
           <header className="lg:hidden flex items-center justify-between p-4 border-b bg-background sticky top-0 z-10">
-            <h1 className="text-xl font-bold text-primary">Taxease</h1>
+            <div></div>
             <SidebarTrigger data-testid="button-sidebar-toggle">
               <Menu className="w-6 h-6" />
             </SidebarTrigger>

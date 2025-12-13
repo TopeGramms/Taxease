@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import Logo from "@/components/Logo";
 
 export default function Landing() {
   const [, navigate] = useLocation();
@@ -8,9 +9,8 @@ export default function Landing() {
     <div className="min-h-screen w-full bg-gray-50 text-gray-900">
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
         <header className="flex items-center justify-between py-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 border border-gray-300 text-gray-600 font-bold">TE</span>
-            <span className="text-lg font-semibold text-gray-800">Taxease</span>
+          <div className="flex items-center">
+            <Logo className="w-16 h-16 md:w-20 md:h-20" />
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" onClick={() => navigate("/account")}>Account</Button>

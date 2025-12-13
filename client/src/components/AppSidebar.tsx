@@ -3,6 +3,7 @@ import {
   SidebarContent,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import Logo from "./Logo";
 
 interface AppSidebarProps {
   mode: "2026" | "legacy";
@@ -13,13 +14,8 @@ export default function AppSidebar({ mode, onModeChange }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="p-6 space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-primary" data-testid="text-sidebar-title">
-            Taxease
-          </h1>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Personal income tax calculator
-          </p>
+        <div className="flex items-center justify-center">
+          <Logo className="w-24 h-24 flex-shrink-0" />
         </div>
       </SidebarHeader>
       
