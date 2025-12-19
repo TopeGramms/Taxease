@@ -2,8 +2,8 @@ import { MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function WhatsAppButton() {
-  const phoneNumber = "15025589643";
-  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+  const phoneNumber = "2348073562745";
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=Hi!%20I%20have%20a%20question%20about%20TaxEase.`;
   const [showTooltip, setShowTooltip] = useState(true);
 
   useEffect(() => {

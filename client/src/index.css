@@ -48,9 +48,8 @@
 
   --popover-border: 0 0% 87%;
 
-  --primary: 152 100% 30%;
-
-  --primary-foreground: 152 100% 98%;
+  --primary: 162 94% 20%; /* Deep Emerald Green */
+  --primary-foreground: 162 94% 98%;
 
   --secondary: 0 0% 90%;
 
@@ -166,9 +165,8 @@
 
   --popover-border: 0 0% 17%;
 
-  --primary: 152 100% 30%;
-
-  --primary-foreground: 152 100% 98%;
+  --primary: 162 94% 25%; /* Slightly lighter for dark mode contrast */
+  --primary-foreground: 162 94% 98%;
 
   --secondary: 0 0% 15%;
 

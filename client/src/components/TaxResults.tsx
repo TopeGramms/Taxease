@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Download, Info, RotateCcw, UserPlus, Save } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { Download, Info, RotateCcw, MessageCircle } from "lucide-react";
 import { jsPDF } from "jspdf";
 
 interface TaxResultsProps {
   totalTax: number;
   afterTaxIncome: number;
   mode: "2026" | "legacy";
-  onDownloadPDF?: () => void; // Optional, PDF generation handled internally
+  onDownloadPDF?: () => void;
   onRecalculate?: () => void;
   onSave?: () => Promise<void>;
   taxableIncome?: number;
@@ -22,84 +21,161 @@ export default function TaxResults({
   afterTaxIncome,
   mode,
   onRecalculate,
-  onSave,
   taxableIncome,
   effectiveRate,
   breakdown,
   income,
   totalDeductions,
 }: TaxResultsProps) {
-  const { user, subscription, startCheckout } = useAuth();
   const formatCurrency = (amount: number) => {
     return `₦${amount.toLocaleString()}`;
   };
 
+  const whatsappNumber = "2348073562745";
+  const whatsappMessage = encodeURIComponent(
+    `Hi! I just calculated my tax on TaxEase.\n\nMy total tax is ${formatCurrency(Math.round(totalTax))} on income of ${formatCurrency(income || 0)}.\n\nI'd like help with tax filing or have some questions.`
+  );
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
     let yPos = margin;
 
-    // App name
-    doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.text("Taxease – Personal income tax calculator", pageWidth / 2, yPos, { align: "center" });
+    // --- Header Branding ---
+    // Load Logo
+    const logoImg = new Image();
+    logoImg.src = "/Minimalist_Taxease_Logo_with_Growth_Symbols-removebg-preview.png";
+
+    // Add Logo (top left)
+    doc.addImage(logoImg, "PNG", margin, yPos - 5, 25, 25);
+
+    // Right side Header Info
+    doc.setFont("times", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(31, 41, 55); // #1f2937 - Dark Charcoal
+    doc.text("Personal Income Tax Assessment", pageWidth - margin, yPos + 5, { align: "right" });
+
+    doc.setFontSize(10);
+    doc.setFont("times", "normal");
+    const date = new Date().toLocaleDateString("en-NG", {
+      year: "numeric", month: "long", day: "numeric"
+    });
+    doc.text(`Computation Date: ${date}`, pageWidth - margin, yPos + 12, { align: "right" });
+    const refId = `TXE-${Math.random().toString(36).substring(7).toUpperCase()}`;
+    doc.text(`Report Reference: ${refId}`, pageWidth - margin, yPos + 17, { align: "right" });
+
+    yPos += 30;
+
+    // --- Divider ---
+    doc.setDrawColor(31, 41, 55);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+
     yPos += 15;
 
-    // Title
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "normal");
-    doc.text("Tax Calculation Summary", pageWidth / 2, yPos, { align: "center" });
-    yPos += 20;
-
-    // Data rows
+    // --- Executive Summary ---
     doc.setFontSize(12);
-    const lineHeight = 8;
-    const labelWidth = 80;
+    doc.setFont("times", "bold");
+    doc.text("1. TAXPAYER INCOME SUMMARY", margin, yPos);
+    yPos += 10;
 
-    if (income !== undefined) {
-      doc.text("Income:", margin, yPos);
-      doc.text(formatCurrency(income), margin + labelWidth, yPos);
-      yPos += lineHeight;
+    doc.setFont("times", "normal");
+    doc.setFontSize(11);
+
+    const summaryData = [
+      { label: "Gross Annual Income", value: formatCurrency(income || 0) },
+      { label: "Allowable Deductions & Reliefs", value: formatCurrency(totalDeductions || 0) },
+      { label: "Net Chargeable Income", value: formatCurrency(taxableIncome || 0) },
+    ];
+
+    summaryData.forEach((item, idx) => {
+      doc.text(item.label, margin + 5, yPos + (idx * 8));
+      doc.text(item.value, pageWidth - margin - 5, yPos + (idx * 8), { align: "right" });
+    });
+
+    yPos += 30;
+
+    // --- Final Calculation Box ---
+    doc.setFillColor(249, 250, 251);
+    doc.setDrawColor(31, 41, 55);
+    doc.rect(margin, yPos, contentWidth, 25, "FD");
+
+    doc.setFontSize(14);
+    doc.setFont("times", "bold");
+    doc.text("TOTAL ESTIMATED TAX PAYABLE:", margin + 5, yPos + 16);
+    doc.text(formatCurrency(Math.round(totalTax)), pageWidth - margin - 5, yPos + 16, { align: "right" });
+
+    yPos += 40;
+
+    // --- Detailed Bracket Breakdown ---
+    if (breakdown && breakdown.length > 0) {
+      doc.setFontSize(12);
+      doc.setFont("times", "bold");
+      doc.text("2. COMPUTATION BREAKDOWN (BRACKETED)", margin, yPos);
+      yPos += 10;
+
+      // Header Row
+      doc.setFillColor(243, 244, 246);
+      doc.rect(margin, yPos, contentWidth, 10, "F");
+      doc.setFontSize(10);
+      doc.text("Taxable Income Bracket", margin + 5, yPos + 7);
+      doc.text("Amount in Bracket", margin + 70, yPos + 7);
+      doc.text("Rate (%)", margin + 115, yPos + 7);
+      doc.text("Tax Owed", pageWidth - margin - 5, yPos + 7, { align: "right" });
+
+      yPos += 10;
+      doc.setFont("times", "normal");
+
+      breakdown.forEach((bracket, idx) => {
+        if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
+
+        doc.text(bracket.range, margin + 5, yPos + 7);
+        doc.text(formatCurrency(Math.round(bracket.amount)), margin + 70, yPos + 7);
+        doc.text(`${(bracket.rate * 100).toFixed(0)}%`, margin + 115, yPos + 7);
+        doc.text(formatCurrency(Math.round(bracket.tax)), pageWidth - margin - 5, yPos + 7, { align: "right" });
+
+        doc.setDrawColor(229, 231, 235);
+        doc.setLineWidth(0.1);
+        doc.line(margin, yPos + 10, pageWidth - margin, yPos + 10);
+        yPos += 10;
+      });
     }
 
-    if (totalDeductions !== undefined) {
-      doc.text("Total Deductions:", margin, yPos);
-      doc.text(formatCurrency(totalDeductions), margin + labelWidth, yPos);
-      yPos += lineHeight;
-    }
+    // --- Footer & Advisory ---
+    yPos = pageHeight - 55;
 
-    if (taxableIncome !== undefined) {
-      doc.text("Taxable Income:", margin, yPos);
-      doc.text(formatCurrency(taxableIncome), margin + labelWidth, yPos);
-      yPos += lineHeight;
-    }
-
-    yPos += 5;
-    doc.setFont("helvetica", "bold");
-    doc.text("Total Tax:", margin, yPos);
-    doc.text(formatCurrency(Math.round(totalTax)), margin + labelWidth, yPos);
-    yPos += lineHeight;
-
-    doc.setFont("helvetica", "normal");
-    doc.text("After-Tax Income:", margin, yPos);
-    doc.text(formatCurrency(afterTaxIncome), margin + labelWidth, yPos);
-    yPos += lineHeight;
-
-    if (effectiveRate !== undefined) {
-      doc.text("Effective Tax Rate:", margin, yPos);
-      doc.text(`${effectiveRate.toFixed(2)}%`, margin + labelWidth, yPos);
-      yPos += lineHeight;
-    }
-
-    // Footer
-    yPos = doc.internal.pageSize.getHeight() - 20;
+    doc.setFont("times", "bold");
     doc.setFontSize(10);
-    doc.setFont("helvetica", "italic");
-    doc.text("Calculated under 2026 Tax reform (effective Jan 1, 2026)", pageWidth / 2, yPos, { align: "center" });
+    doc.text("3. ADVISORY NOTES", margin, yPos);
+    yPos += 6;
+    doc.setFont("times", "normal");
+    doc.setFontSize(9);
+    doc.text("• This estimate is generated based on current 2026 Nigerian Tax Laws.", margin + 5, yPos);
+    doc.text("• For official filing, ensure all non-taxable allowances are documented.", margin + 5, yPos + 5);
 
-    // Save PDF
-    doc.save("taxease-calculation.pdf");
+    yPos += 15;
+    doc.setDrawColor(31, 41, 55);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+
+    doc.setFontSize(8);
+    doc.setFont("times", "italic");
+    doc.setTextColor(107, 114, 128);
+    const disclaimer = "This report is an automated estimate for tax planning and assessment. While every effort is made to ensure accuracy, this is NOT a legal tax document. Please consult the FIRS or your State IRS for final assessment.";
+
+    const splitDisclaimer = doc.splitTextToSize(disclaimer, contentWidth);
+    doc.text(splitDisclaimer, margin, yPos + 7);
+
+    doc.setFont("times", "bold");
+    doc.setTextColor(31, 41, 55);
+    doc.setFontSize(10);
+    doc.text("taxease.com.ng — Nigeria's Digital Tax Companion", pageWidth / 2, pageHeight - 10, { align: "center" });
+
+    doc.save(`TaxEase_Report_${refId}.pdf`);
   };
 
   return (
@@ -119,7 +195,7 @@ export default function TaxResults({
             </p>
           </div>
           <p className="text-sm italic text-muted-foreground pt-4 border-t border-border">
-            Congrats! FG just took {formatCurrency(totalTax)} from your hustle 💸
+            Your tax breakdown is ready. Download the PDF to keep a copy.
           </p>
         </div>
       </div>
@@ -206,39 +282,27 @@ export default function TaxResults({
         )}
       </div>
 
-      {!user && (
-        <Button
-          onClick={() => (window.location.href = "/account")}
-          variant="secondary"
-          className="w-full h-12 text-base font-semibold"
-          data-testid="button-create-account"
+      {/* Premium Service CTA */}
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="p-1 px-2 bg-green-100 text-green-700 text-[10px] font-bold uppercase rounded tracking-wider">
+            Premium Support
+          </div>
+        </div>
+        <h3 className="font-bold text-gray-900 mb-2">Need Expert Help with Your Taxes?</h3>
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          Avoid errors and maximize your returns. Connect with a professional to help you file correctly with the FIRS or your State IRS.
+        </p>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-3 w-full md:w-auto px-8 py-4 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#20BA5A] transition-all hover:shadow-lg active:scale-95"
         >
-          <UserPlus className="w-5 h-5 mr-2" />
-          Create Account to Save Results
-        </Button>
-      )}
-
-      {user && subscription?.status !== "active" && (
-        <Button
-          onClick={() => startCheckout()}
-          className="w-full h-12 text-base font-semibold"
-          data-testid="button-upgrade"
-        >
-          <UserPlus className="w-5 h-5 mr-2" />
-          Upgrade to Save Results
-        </Button>
-      )}
-
-      {user && subscription?.status === "active" && onSave && (
-        <Button
-          onClick={() => onSave()}
-          className="w-full h-12 text-base font-semibold"
-          data-testid="button-save-results"
-        >
-          <Save className="w-5 h-5 mr-2" />
-          Save Results
-        </Button>
-      )}
+          <MessageCircle className="w-5 h-5 fill-current" />
+          Chat with a Tax Consultant
+        </a>
+      </div>
     </div>
   );
 }
