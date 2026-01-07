@@ -12,6 +12,44 @@ interface TaxCalculatorFormProps {
   mode: "2026" | "legacy";
 }
 
+// Collapsible section component
+const CollapsibleSection = ({
+  title,
+  subtitle,
+  isOpen,
+  onToggle,
+  children
+}: {
+  title: string;
+  subtitle: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) => (
+  <div className="border border-border rounded-lg overflow-hidden">
+    <button
+      type="button"
+      onClick={onToggle}
+      className="w-full px-4 py-3 flex items-center justify-between bg-muted/30 hover:bg-muted/50 transition-colors"
+    >
+      <div className="text-left">
+        <span className="font-medium text-foreground">{title}</span>
+        <span className="text-sm text-muted-foreground ml-2">{subtitle}</span>
+      </div>
+      {isOpen ? (
+        <ChevronUp className="w-5 h-5 text-muted-foreground" />
+      ) : (
+        <ChevronDown className="w-5 h-5 text-muted-foreground" />
+      )}
+    </button>
+    {isOpen && (
+      <div className="p-4 border-t border-border">
+        {children}
+      </div>
+    )}
+  </div>
+);
+
 export default function TaxCalculatorForm({ mode }: TaxCalculatorFormProps) {
   const [formData, setFormData] = useState<TaxFormData>({
     employmentIncome: "",
@@ -163,43 +201,7 @@ export default function TaxCalculatorForm({ mode }: TaxCalculatorFormProps) {
   };
 
 
-  // Collapsible section component
-  const CollapsibleSection = ({
-    title,
-    subtitle,
-    isOpen,
-    onToggle,
-    children
-  }: {
-    title: string;
-    subtitle: string;
-    isOpen: boolean;
-    onToggle: () => void;
-    children: React.ReactNode;
-  }) => (
-    <div className="border border-border rounded-lg overflow-hidden">
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full px-4 py-3 flex items-center justify-between bg-muted/30 hover:bg-muted/50 transition-colors"
-      >
-        <div className="text-left">
-          <span className="font-medium text-foreground">{title}</span>
-          <span className="text-sm text-muted-foreground ml-2">{subtitle}</span>
-        </div>
-        {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-muted-foreground" />
-        ) : (
-          <ChevronDown className="w-5 h-5 text-muted-foreground" />
-        )}
-      </button>
-      {isOpen && (
-        <div className="p-4 border-t border-border">
-          {children}
-        </div>
-      )}
-    </div>
-  );
+
 
   // Check if form is empty
   const isFormEmpty = !formData.employmentIncome && !formData.businessIncome;
